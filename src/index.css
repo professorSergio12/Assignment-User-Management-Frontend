@@ -1,0 +1,31 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+/* Custom styles for the table */
+.table {
+  border-collapse: collapse;
+}
+
+.table th,
+.table td {
+  transition: background-color 0.3s ease;
+}
+
+.table tr:hover {
+  background-color: rgba(255, 255, 255, 0.1); /* Change this to any hover color */
+}
+
+/* styles.css (or your appropriate CSS file) */
+.modal-header {
+  padding: 1rem; /* Add padding */
+}
+
+.modal-body {
+  padding: 1rem; /* Add padding */
+}
+
+.modal-footer {
+  padding: 1rem; /* Add padding */
+}
+
