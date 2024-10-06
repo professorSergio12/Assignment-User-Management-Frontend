@@ -1,25 +1,30 @@
-// Home.js
 import React, { useEffect, useState } from "react";
 import { Link } from "react-router-dom";
 import axios from "axios";
 import { Alert, Button } from "flowbite-react";
 import CreateUser from "./CreateUser";
+import { ClipLoader as Spinner } from "react-spinners"; // Import Spinner correctly
 
 export default function Home() {
   const [data, setData] = useState([]);
   const [error, setError] = useState(false);
   const [isCreateUserOpen, setCreateUserOpen] = useState(false);
+  const [loading, setLoading] = useState(true); // Add loading state
+  const [searchQuery, setSearchQuery] = useState(""); // State for search input
 
   useEffect(() => {
     const fetchData = async () => {
       try {
         setError(false);
+        setLoading(true); // Set loading to true before fetching data
         const response = await axios.get(
           "https://jsonplaceholder.typicode.com/users"
         );
-        setData(response.data); // axios automatically parses JSON
+        setData(response.data);
       } catch (error) {
         setError(true);
+      } finally {
+        setLoading(false); // Set loading to false after fetching data
       }
     };
 
@@ -27,8 +32,18 @@ export default function Home() {
   }, []);
 
   const handleUserCreated = (newUser) => {
-    setData([...data, newUser]); // Add new user to the state
+    setData([...data, newUser]);
   };
+
+  // Function to handle the search input change
+  const handleSearch = (event) => {
+    setSearchQuery(event.target.value);
+  };
+
+  // Filter data based on the search query
+  const filteredData = data.filter((user) =>
+    user.name.toLowerCase().includes(searchQuery.toLowerCase())
+  );
 
   return (
     <>
@@ -38,11 +53,25 @@ export default function Home() {
             <Alert color="failure">
               Error occurred while fetching the data.
             </Alert>
+          ) : loading ? ( // Show loading spinner while fetching
+            <div className="flex justify-center items-center h-64">
+              <Spinner size={50} color="blue" />
+            </div>
           ) : (
             <>
               <Button onClick={() => setCreateUserOpen(true)} className="mb-4">
                 Create User
               </Button>
+
+              {/* Search Input */}
+              <input
+                type="text"
+                placeholder="Search by name..."
+                value={searchQuery}
+                onChange={handleSearch}
+                className="mb-4 p-2 border border-gray-300 rounded"
+              />
+
               <table className="w-full text-sm text-left rtl:text-right text-blue-100 dark:text-blue-100">
                 <thead className="text-xs text-white uppercase bg-blue-500 dark:text-white">
                   <tr>
@@ -64,7 +93,7 @@ export default function Home() {
                   </tr>
                 </thead>
                 <tbody>
-                  {data.map((item, index) => (
+                  {filteredData.map((item, index) => (
                     <tr
                       key={item.id}
                       className={
