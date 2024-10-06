@@ -41,8 +41,12 @@ export default function Home() {
   };
 
   // Filter data based on the search query
-  const filteredData = data.filter((user) =>
-    user.name.toLowerCase().includes(searchQuery.toLowerCase())
+ const filteredData = data.filter(
+    (user) =>
+      user.name.toLowerCase().includes(searchQuery.toLowerCase()) ||
+      user.username.toLowerCase().includes(searchQuery.toLowerCase()) ||
+      user.email.toLowerCase().includes(searchQuery.toLowerCase()) ||
+      user.id.toString().includes(searchQuery)
   );
 
   return (
